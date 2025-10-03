@@ -1,10 +1,30 @@
-import { StrictMode } from 'react'
+import '@mantine/core/styles.css';
 import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import { MantineProvider } from '@mantine/core'
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import {IconMoon, IconSun} from "@tabler/icons-react";
+import App from "./App.tsx";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
+    <QueryClientProvider client={queryClient}>
+        <MantineProvider theme={{
+            other: {
+                icons: {
+                    theme: {
+                        light: IconSun, 
+                        dark: IconMoon, 
+                    },
+                },
+            },
+        }}>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/*" element={<App />}/>
+                </Routes>
+            </BrowserRouter>
+        </MantineProvider>
+    </QueryClientProvider>
 )
