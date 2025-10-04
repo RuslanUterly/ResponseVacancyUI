@@ -1,21 +1,17 @@
-import {Burger, Button, Container, Group, Modal, Title} from "@mantine/core";
+import {Burger, Button, Container, Group, Title} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import classes from './Header.module.css';
 import { ThemeToggle } from "../../../shared/components/theme/ThemeToogle.tsx";
 import {mainColor} from "../../../shared/components/theme/colors.ts";
 import {useAuthStore} from "../../auth/store.ts";
-import {useState} from "react";
-import {RegisterForm} from "../../auth/Components/RegisterForm.tsx";
-import {LoginForm} from "../../auth/Components/LoginForm.tsx";
+import {useNavigate} from "react-router-dom";
 
 export const Header = () => {
     const [opened, { toggle }] = useDisclosure(false);
+    const navigate = useNavigate();
 
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     const logout = useAuthStore((state) => state.logout);
-
-    const [loginOpened, setLoginOpened] = useState(false);
-    const [registerOpened, setRegisterOpened] = useState(false);
 
     return (
         <>
@@ -29,11 +25,11 @@ export const Header = () => {
                             </Group>
                             <Group>
                                 {isAuthenticated ? (
-                                    <Button onClick={logout}>Выйти</Button>
+                                    <Button color={mainColor} onClick={() => { logout(); navigate('/'); }}>Выйти</Button>
                                 ) : (
                                     <>
-                                        <Button color={mainColor} variant="filled" onClick={() => setLoginOpened(true)}>Вход</Button>
-                                        <Button color={mainColor} variant="outline" onClick={() => setRegisterOpened(true)}>Регистрация</Button>
+                                        <Button color={mainColor} variant="filled" onClick={() => navigate('/auth/login')}>Вход</Button>
+                                        <Button color={mainColor} variant="outline" onClick={() => navigate('/auth/register')}>Регистрация</Button>
                                     </>
                                 )}
                             </Group>
@@ -42,14 +38,6 @@ export const Header = () => {
                     </div>
                 </Container>
             </header>
-    
-            <Modal opened={loginOpened} onClose={() => setLoginOpened(false)} withCloseButton={false} centered>
-                <LoginForm onSuccess={() => setLoginOpened(false)} />
-            </Modal>
-        
-            <Modal opened={registerOpened} onClose={() => setRegisterOpened(false)} withCloseButton={false} centered>
-                <RegisterForm onSuccess={() => setRegisterOpened(false)} />
-            </Modal>
         </>
     );
 }
