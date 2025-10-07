@@ -8,7 +8,7 @@ export default function LoginPage() {
     const from = (location.state as any)?.from?.pathname || '/';
 
     return (
-        <Center style={{ minHeight: '100vh' }}>
+        <Center>
             <Container size={720}>
                 <Paper p="md" radius="md" withBorder>
                     <LoginForm onSuccess={() => navigate(from, { replace: true })} />

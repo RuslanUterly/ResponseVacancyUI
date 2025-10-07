@@ -5,6 +5,8 @@ import { BrowserRouter } from 'react-router-dom';
 import {IconMoon, IconSun} from "@tabler/icons-react";
 import App from "./App.tsx";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import {Notifications} from "@mantine/notifications";
+import '@mantine/notifications/styles.css';
 
 const queryClient = new QueryClient();
 
@@ -21,6 +23,7 @@ createRoot(document.getElementById('root')!).render(
             },
         }}>
             <BrowserRouter>
+                <Notifications position="bottom-right" zIndex={9999}/>
                 <App />
             </BrowserRouter>
         </MantineProvider>

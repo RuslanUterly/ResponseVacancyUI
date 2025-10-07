@@ -1,6 +1,7 @@
 import type {Credentials, LoginResponse, RegisterResponse} from './types';
+import {baseUrl} from "../../shared/api/options.ts";
 
-const BASE_URL = 'http://localhost:5115/auth';
+const BASE_URL = baseUrl + '/auth';
 
 export const login = async (data: Credentials): Promise<LoginResponse> => {
     const res = await fetch(`${BASE_URL}/login`, {
