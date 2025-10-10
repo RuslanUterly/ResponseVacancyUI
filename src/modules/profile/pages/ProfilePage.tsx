@@ -19,7 +19,7 @@ import {IconCheck, IconX} from "@tabler/icons-react";
 import {hhColor, mainColor, successColor} from "../../../shared/components/theme/colors.ts";
 
 export const ProfilePage = () => {
-    const { user, error, fetchProfile, addClientCredentials } = useProfileStore();
+    const { user, error, isHhTokenActive, isHhLinked, fetchProfile, updateClientCredentials } = useProfileStore();
     
     const [clientId, setClientId] = useState("");
     const [clientSecret, setClientSecret] = useState("");
@@ -37,7 +37,7 @@ export const ProfilePage = () => {
     }, [user]);
 
     const handleSave = async () => {
-        await addClientCredentials({ clientId, clientSecret });
+        await updateClientCredentials({ clientId, clientSecret });
 
         if (!error) {
             notifications.show({
@@ -56,7 +56,6 @@ export const ProfilePage = () => {
             });
         }
     };
-
 
     return (
         <Container size="md" style={{ width: "100%" }}>
@@ -108,16 +107,35 @@ export const ProfilePage = () => {
                                 </Button>
                                 <Button 
                                     variant="default"
-                                    onClick={() => setIsEditing(false)}>Отмена</Button>
+                                    onClick={() => setIsEditing(false)}>Отмена
+                                </Button>
                             </Group>
                             ) : (
                             <Group justify="space-between">
                                 <Button 
                                     color={mainColor}
-                                    onClick={() => setIsEditing(true)}>Изменить</Button>
-                                <Button 
-                                    color={hhColor}
-                                    onClick={() => {}}>Войти через HH</Button>
+                                    onClick={() => setIsEditing(true)}>Изменить
+                                </Button>
+                                {clientId && clientSecret && !isHhLinked && !isHhTokenActive ? (
+                                    <Button
+                                        color={hhColor}
+                                        onClick={() => {
+                                            const redirectUri = `${window.location.origin}/auth/hh/callback`;
+                                            const authUrl = `https://hh.ru/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}`;
+
+                                            window.location.href = authUrl;
+                                        }}>Войти через HH
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        color={hhColor}
+                                        onClick={() => {
+                                            console.log("Пользователь уже авторизован в HH");
+                                        }}
+                                    >
+                                        HH подключён
+                                    </Button>                                
+                                )}
                             </Group>
                         )}
                     </Stack>

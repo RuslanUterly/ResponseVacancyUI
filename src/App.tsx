@@ -9,6 +9,7 @@ import {useEffect} from "react";
 import {NotFoundPage} from "./shared/pages/NotFoundPage.tsx";
 import LayoutCenter from "./shared/components/layout/LayoutCenter.tsx";
 import {ProfilePage} from "./modules/profile/pages/ProfilePage.tsx";
+import {HhCallbackPage} from "./modules/profile/pages/hh/HhCallbackPage.tsx";
 
 function App() {
     const initProfile = useProfileStore((state) => state.init);
@@ -38,8 +39,18 @@ function App() {
                     path="/profile"
                     element={
                         <ProtectedRoute>
-                            {/*<div></div>*/}
                             <ProfilePage />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/auth/hh/callback"
+                    element={
+                        <ProtectedRoute>
+                            <LayoutCenter>
+                                <HhCallbackPage />
+                            </LayoutCenter>
                         </ProtectedRoute>
                     }
                 />

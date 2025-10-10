@@ -16,8 +16,8 @@ export const getProfile = async (): Promise<UserInfo> => {
     return await response.json();
 };
 
-export const addHeadHunterCredentials = async (dto: HeadHunterClientCredentialsDto): Promise<void> => {
-    const response = await fetch(`${BASE_URL}/add-hh-credentials`, {
+export const updateHeadHunterCredentials = async (dto: HeadHunterClientCredentialsDto): Promise<void> => {
+    const response = await fetch(`${BASE_URL}/update-hh-credentials`, {
         method: "POST",
         headers: {
             ...authHeader(),
@@ -30,3 +30,30 @@ export const addHeadHunterCredentials = async (dto: HeadHunterClientCredentialsD
         throw new Error("Failed to add HeadHunter credentials");
     }
 };
+
+export const exchangeHhCode = async (code: string): Promise<boolean> => {
+    const res = await fetch(`${BASE_URL}/exchange-hh-code`, {
+        method: "POST",
+        headers: {
+            ...authHeader(),
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(code),
+    });
+    if (!res.ok) throw new Error("Ошибка обмена кода на токен");
+    return res.json();
+};
+
+export const refreshHhTokens = async (): Promise<boolean> => {
+    const res = await fetch(`${BASE_URL}/refresh-hh-tokens`, {
+        method: "POST",
+        headers: {
+            ...authHeader(),
+            "Content-Type": "application/json",
+        },
+    });
+    if (!res.ok) throw new Error("Ошибка обновления токена");
+    return res.json();
+};
+

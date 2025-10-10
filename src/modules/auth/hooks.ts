@@ -6,7 +6,7 @@ import {useProfileStore} from "../profile/store.ts";
 
 export const useLogin = () => {
     const setToken = useAuthStore((state) => state.setToken);
-    const fetchProfileSummary = useProfileStore((state) => state.fetchProfileSummary);
+    const fetchProfile = useProfileStore((state) => state.fetchProfile);
 
     return useMutation<LoginResponse, Error, Credentials>({
         mutationFn: (credentials) => apiLogin(credentials),
@@ -15,7 +15,7 @@ export const useLogin = () => {
             localStorage.setItem('accessToken', data.accessToken);
 
             try {
-                await fetchProfileSummary();
+                await fetchProfile();
             } catch (err) {
                 console.error('Ошибка загрузки профиля:', err);
             }
