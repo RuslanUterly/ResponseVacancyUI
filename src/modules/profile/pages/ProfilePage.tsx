@@ -1,144 +1,31 @@
 import { useEffect } from "react";
 import { useProfileStore } from "../../../modules/profile/store";
 import {
-    Button,
-    TextInput,
-    Stack,
     Container,
-    Group,
     Paper,
     SimpleGrid,
-    Text,
-    Title,
     Space,
 } from "@mantine/core";
-import {notifications} from "@mantine/notifications";
-
-import { useState } from "react";
-import {IconCheck, IconX} from "@tabler/icons-react";
-import {hhColor, mainColor, successColor} from "../../../shared/components/theme/colors.ts";
+import {ProfileHeader} from "../components/ProfileHeader.tsx";
+import {HhCredentialsForm} from "../components/HhCredentialsForm.tsx";
 
 export const ProfilePage = () => {
-    const { user, error, isHhTokenActive, isHhLinked, fetchProfile, updateClientCredentials } = useProfileStore();
-    
-    const [clientId, setClientId] = useState("");
-    const [clientSecret, setClientSecret] = useState("");
-    const [isEditing, setIsEditing] = useState(false);
+    const { user, fetchProfile } = useProfileStore();
 
     useEffect(() => {
         fetchProfile();
     }, [fetchProfile]);
 
-    useEffect(() => {
-        if (user) {
-            setClientId(user.clientId ?? "");
-            setClientSecret(user.clientSecret ?? "");
-        }
-    }, [user]);
-
-    const handleSave = async () => {
-        await updateClientCredentials({ clientId, clientSecret });
-
-        if (!error) {
-            notifications.show({
-                title: "Успешно",
-                message: "Данные были успешно обновлены!",
-                color: "green",
-                icon: <IconCheck size={18} />,
-            });
-            setIsEditing(false);
-        } else {
-            notifications.show({
-                title: "Ошибка",
-                message: "Не удалось обновить данные. Попробуйте снова.",
-                color: "red",
-                icon: <IconX size={18} />,
-            });
-        }
-    };
-
     return (
         <Container size="md" style={{ width: "100%" }}>
-            <Group mt={50} >
-                <Title order={2}>{user?.email}</Title>
-            </Group>
-            
-            <Space h="lg"/>
-            
+            <ProfileHeader email={user?.email} />
+            <Space h="lg" />
             <SimpleGrid cols={2}>
                 <Paper p="md" radius="md" withBorder>
-                    <Stack>
-                        <Title order={4}>Настройки HH</Title>
-
-                        {!isEditing && (
-                            <Stack>
-                                <div>
-                                    <Text size="sm" fw={500}>Client_ID</Text>
-                                    <Text style={{ wordBreak: "break-word" }}>{user?.clientId ?? "—"}</Text>
-                                </div>
-                                <div>
-                                    <Text size="sm" fw={500}>Client_Secret</Text>
-                                    <Text style={{ wordBreak: "break-word" }}>{user?.clientSecret ?? "—"}</Text>    
-                                </div>
-                            </Stack>
-                        )}
-
-                        {isEditing && (
-                            <Group>
-                                <TextInput
-                                    label="Client_ID"
-                                    value={clientId}
-                                    onChange={(e) => setClientId(e.currentTarget.value)}
-                                    style={{ width: "100%" }}
-                                />
-                                <TextInput
-                                    label="Client_Secret"
-                                    value={clientSecret}
-                                    onChange={(e) => setClientSecret(e.currentTarget.value)}
-                                    style={{ width: "100%" }}
-                                />
-                            </Group>
-                        )}
-                        
-                        {isEditing ? (
-                            <Group justify="space-between">
-                                <Button color={successColor} onClick={handleSave}>
-                                    Сохранить
-                                </Button>
-                                <Button 
-                                    variant="default"
-                                    onClick={() => setIsEditing(false)}>Отмена
-                                </Button>
-                            </Group>
-                            ) : (
-                            <Group justify="space-between">
-                                <Button 
-                                    color={mainColor}
-                                    onClick={() => setIsEditing(true)}>Изменить
-                                </Button>
-                                {clientId && clientSecret && !isHhLinked && !isHhTokenActive ? (
-                                    <Button
-                                        color={hhColor}
-                                        onClick={() => {
-                                            const redirectUri = `${window.location.origin}/auth/hh/callback`;
-                                            const authUrl = `https://hh.ru/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}`;
-
-                                            window.location.href = authUrl;
-                                        }}>Войти через HH
-                                    </Button>
-                                ) : (
-                                    <Button
-                                        color={hhColor}
-                                        onClick={() => {
-                                            console.log("Пользователь уже авторизован в HH");
-                                        }}
-                                    >
-                                        HH подключён
-                                    </Button>                                
-                                )}
-                            </Group>
-                        )}
-                    </Stack>
+                    <HhCredentialsForm />
+                </Paper>
+                <Paper>
+                    
                 </Paper>
             </SimpleGrid>
         </Container>

@@ -13,3 +13,7 @@ export interface HeadHunterClientCredentialsDto {
     clientId: string;
     clientSecret: string;
 }
+
+export interface HeaderProps {
+    email?: string;
+}
