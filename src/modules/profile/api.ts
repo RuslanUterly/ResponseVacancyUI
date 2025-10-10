@@ -9,10 +9,7 @@ export const getProfile = async (): Promise<UserInfo> => {
         headers: authHeader() 
     });
     
-    if (!response.ok) {
-        throw new Error("Failed to fetch full user info");
-    }
-    
+    if (!response.ok) throw new Error("Failed to fetch full user info");
     return await response.json();
 };
 
@@ -26,13 +23,12 @@ export const updateHeadHunterCredentials = async (dto: HeadHunterClientCredentia
         body: JSON.stringify(dto),
     });
 
-    if (!response.ok) {
-        throw new Error("Failed to add HeadHunter credentials");
-    }
+    if (!response.ok) throw new Error("Failed to add HeadHunter credentials");
+    return;
 };
 
 export const exchangeHhCode = async (code: string): Promise<boolean> => {
-    const res = await fetch(`${BASE_URL}/exchange-hh-code`, {
+    const response = await fetch(`${BASE_URL}/exchange-hh-code`, {
         method: "POST",
         headers: {
             ...authHeader(),
@@ -41,19 +37,32 @@ export const exchangeHhCode = async (code: string): Promise<boolean> => {
         credentials: "include",
         body: JSON.stringify(code),
     });
-    if (!res.ok) throw new Error("Ошибка обмена кода на токен");
-    return res.json();
+    if (!response.ok) throw new Error("Ошибка обмена кода на токен");
+    return await response.json();
 };
 
 export const refreshHhTokens = async (): Promise<boolean> => {
-    const res = await fetch(`${BASE_URL}/refresh-hh-tokens`, {
+    const response = await fetch(`${BASE_URL}/refresh-hh-tokens`, {
         method: "POST",
         headers: {
             ...authHeader(),
             "Content-Type": "application/json",
         },
     });
-    if (!res.ok) throw new Error("Ошибка обновления токена");
-    return res.json();
+    if (!response.ok) throw new Error("Ошибка обновления токена");
+    return await response.json();
 };
+
+export const updateHhResponseMode = async (isActive: boolean): Promise<void> => {
+    const response = await fetch(`${BASE_URL}/update-hh-response-mode`, {
+        method: "POST",
+        headers: {
+            ...authHeader(),
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(isActive),
+    });
+    if (!response.ok) throw new Error("Ошибка обновления режима");
+    return;
+}
 

@@ -2,6 +2,7 @@ export interface UserInfoSummary {
     id: bigint;
     email: string;
     userName?: string;
+    isActiveResponse: boolean | null;
 }
 
 export interface UserInfo extends UserInfoSummary {
