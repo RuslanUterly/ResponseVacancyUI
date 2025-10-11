@@ -10,6 +10,10 @@ import {NotFoundPage} from "./shared/pages/NotFoundPage.tsx";
 import LayoutCenter from "./shared/components/layout/LayoutCenter.tsx";
 import {ProfilePage} from "./modules/profile/pages/ProfilePage.tsx";
 import {HhCallbackPage} from "./modules/profile/pages/hh/HhCallbackPage.tsx";
+import {HomePage} from "./modules/home/pages/HomePage.tsx";
+import {CreateGroupPage} from "./modules/group/pages/CreateGroupPage.tsx";
+import {GroupPage} from "./modules/group/pages/GroupPage.tsx";
+import {EditGroupPage} from "./modules/group/pages/EditGroupPage.tsx";
 
 function App() {
     const initProfile = useProfileStore((state) => state.init);
@@ -23,7 +27,12 @@ function App() {
             <Header />
             
             <Routes>
-                {/*<Route path="/" element={<Home />} />*/}
+                <Route path="/" element={
+                    <ProtectedRoute>
+                        <HomePage />
+                    </ProtectedRoute>
+                } />
+
                 <Route path="/auth/login" element={
                     <LayoutCenter>
                         <LoginPage />
@@ -53,6 +62,37 @@ function App() {
                             </LayoutCenter>
                         </ProtectedRoute>
                     }
+                />
+
+                <Route 
+                    path="/groups/:groupId" 
+                    element={
+                        <ProtectedRoute>
+                            <GroupPage />
+                        </ProtectedRoute>
+                    } 
+                />
+
+                <Route 
+                    path="/groups/create" 
+                    element={
+                        <ProtectedRoute>
+                            <LayoutCenter>
+                                <CreateGroupPage/>
+                            </LayoutCenter>
+                        </ProtectedRoute>
+                    } 
+                />
+                
+                <Route 
+                    path="/groups/:groupId/edit" 
+                    element={
+                        <ProtectedRoute>
+                            <LayoutCenter>
+                                <EditGroupPage/>
+                            </LayoutCenter>
+                        </ProtectedRoute>
+                    } 
                 />
 
                 <Route path="*" element={

@@ -3,7 +3,7 @@ import { Button, Group, Stack, Text, TextInput, Title } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
 import { useProfileStore } from "../store";
-import { mainColor, successColor } from "../../../shared/components/theme/colors";
+import {cancelColor, mainColor, successColor} from "../../../shared/components/theme/colors";
 import {HhConnectionButton} from "./HhConnectionButton.tsx";
 
 export const HhCredentialsForm = () => {
@@ -64,8 +64,8 @@ export const HhCredentialsForm = () => {
 
             {isEditing ? (
                 <Group justify="space-between">
+                    <Button color={cancelColor} variant="light" onClick={() => setIsEditing(false)}>Отмена</Button>
                     <Button color={successColor} onClick={handleSave}>Сохранить</Button>
-                    <Button variant="default" onClick={() => setIsEditing(false)}>Отмена</Button>
                 </Group>
             ) : (
                 <Group justify="space-between">

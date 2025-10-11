@@ -30,64 +30,75 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
     error: null,
     
     fetchProfile: async () => {
-      try {
-          set({ isLoading: true });
-          const user = await getProfile();
-          set({ user: user, isLoading: false });
-      }   catch (error: any) {
-          set({ error: error.message, isLoading: false });
-      }
+        set({ isLoading: true, error: null });
+
+        try {
+            const user = await getProfile();
+            set({ user: user });
+        } catch (error: any) {
+            set({ error: error.message });
+        } finally {
+            set({ isLoading: false });
+        }
     },
     
     updateClientCredentials: async (dto) => {
+        set({ isLoading: true, error: null });
+
         try {
-            set({ isLoading: true });
-            await updateHeadHunterCredentials(dto); 
-            
+            await updateHeadHunterCredentials(dto);
             const user = await getProfile();
-            set({ user: user, isLoading: false });
+            set({ user: user });
         } catch (error: any) {
-            set({ error: error.message, isLoading: false });
+            set({ error: error.message });
+        } finally {
+            set({ isLoading: false });
         }
     },
 
     exchangeHhCode: async (code) => {
+        set({ isLoading: true, error: null });
+        
         try {
-            set({ isLoading: true });
             const response = await exchangeHhCode(code);
             const user = await getProfile();
-            set({ user: user, isLoading: false, isHhLinked: response, isHhTokenActive: response });
+            set({ user: user, isHhLinked: response, isHhTokenActive: response });
             console.log("HH exchange:", response);
         } catch (error: any) {
-            set({ error: error.message, isLoading: false, isHhLinked: false });
+            set({ error: error.message, isHhLinked: false });
+        } finally {
+            set({ isLoading: false });
         }
     },
 
     refreshHhTokens: async () => {
+        set({ isLoading: true, error: null });
+
         try {
-            set({ isLoading: true });
             const response = await refreshHhTokens();
             console.log("Токен успешно обновлён:", response);
             const user = await getProfile();
-            set({ user: user, isLoading: false, isHhTokenActive: response });
+            set({ user: user, isHhTokenActive: response });
         } catch (error: any) {
             console.error("Ошибка обновления HH токена:", error);
-            set({ error: error.message, isLoading: false, isHhLinked: false, isHhTokenActive: false });
+            set({ error: error.message, isHhLinked: false, isHhTokenActive: false });
+        } finally {
+            set({ isLoading: false });
         }
     },
 
     updateHhResponseMode: async (mode: boolean) => {
+        set({ isLoading: true, error: null });
+        
         try {
-            set({ isLoading: true });
             await updateHhResponseMode(mode);
             const user = await getProfile();
-            set({
-                user: user,
-                isLoading: false,
-            });
+            set({ user: user });
         } catch (error: any) {
             console.error("Ошибка при обновлении режима автооткликов:", error);
-            set({ error: error.message, isLoading: false });
+            set({ error: error.message });
+        } finally {
+            set({ isLoading: false });
         }
     },
     
@@ -103,7 +114,7 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
                 set({ isHhTokenActive: response, isHhLinked: response });
             } catch {
                 set({ isHhTokenActive: false, isHhLinked: false });
-            }
+            } 
         }
     },
 }));
