@@ -1,20 +1,24 @@
 import { create } from "zustand";
 import {
-    updateHeadHunterCredentials, getProfile, exchangeHhCode, refreshHhTokens,
-    updateHhResponseMode
+    getProfile, exchangeHhCode, refreshHhTokens,
+    updateHhResponseMode, getResume, hhLogin
 } from "./api";
-import type {HeadHunterClientCredentialsDto, UserInfo} from "./types.ts";
+import type {ResumeDto, UserInfo} from "./types.ts";
 import {useAuthStore} from "../auth/store.ts";
 
 interface ProfileState {
     user: UserInfo | null;
+    resumes: ResumeDto[] | null;
     isLoading: boolean;
     isHhLinked: boolean;
     isHhTokenActive: boolean;
     error: string | null;
     
+    redirectUrl: string | null;
+    
     fetchProfile: () => Promise<void>;
-    updateClientCredentials: (dto: HeadHunterClientCredentialsDto) => Promise<void>;
+    fetchResumes: () => Promise<void>;
+    hhLogin: () => Promise<void>;
     exchangeHhCode: (code: string) => Promise<void>;
     refreshHhTokens: () => Promise<void>;
     updateHhResponseMode: (mode: boolean) => Promise<void>;
@@ -24,10 +28,13 @@ interface ProfileState {
 
 export const useProfileStore = create<ProfileState>((set, get) => ({
     user: null,
+    resumes: null,
     isLoading: false,
     isHhLinked: false,
     isHhTokenActive: false,
     error: null,
+    
+    redirectUrl: null,
     
     fetchProfile: async () => {
         set({ isLoading: true, error: null });
@@ -42,13 +49,25 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
         }
     },
     
-    updateClientCredentials: async (dto) => {
+    fetchResumes: async () => {
+        set({ isLoading: true, error: null });
+        
+        try {
+            const resumes = await getResume();
+            set({ resumes: resumes });
+        } catch (error: any) {
+            set({ error: error.message });
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+    
+    hhLogin: async() => {
         set({ isLoading: true, error: null });
 
         try {
-            await updateHeadHunterCredentials(dto);
-            const user = await getProfile();
-            set({ user: user });
+            const url = await hhLogin();
+            set({ redirectUrl: url });
         } catch (error: any) {
             set({ error: error.message });
         } finally {

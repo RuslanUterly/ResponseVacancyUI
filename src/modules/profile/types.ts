@@ -10,11 +10,11 @@ export interface UserInfo extends UserInfoSummary {
     clientSecret?: string | null;
 }
 
-export interface HeadHunterClientCredentialsDto {
-    clientId: string;
-    clientSecret: string;
-}
-
 export interface HeaderProps {
     email?: string;
+}
+
+export interface ResumeDto {
+    id: string;
+    title: string;
 }

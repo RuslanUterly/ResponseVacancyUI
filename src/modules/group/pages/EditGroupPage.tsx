@@ -5,12 +5,13 @@ import {
     Title,
     Space,
     Container,
-    Loader,
+    Loader, Center,
 } from "@mantine/core";
 import { useGroupStore } from "../store.ts";
 import { GroupForm } from "../components/GroupForm.tsx";
 import {notifications} from "@mantine/notifications";
 import {IconCheck, IconX} from "@tabler/icons-react";
+import {mainColor} from "../../../shared/components/theme/colors.ts";
 
 export const EditGroupPage = () => {
     const navigate = useNavigate();
@@ -19,39 +20,36 @@ export const EditGroupPage = () => {
     const [updated, setUpdated] = useState(false);
 
     useEffect(() => {
-        if (groupId) {
-            fetchGroupById(BigInt(groupId));
-        }
+        if (groupId) fetchGroupById(BigInt(groupId));
     }, [groupId]);
 
-    if (!currentGroup) return <Loader />;
-
     const handleUpdate = async (values: typeof currentGroup) => {
-        if (!currentGroup?.id) return;
+        if (!currentGroup?.id || !values) return;
         await updateGroup(currentGroup.id, values);
         setUpdated(true);
     };
 
     useEffect(() => {
-        if (updated) {
-            if (!error) {
-                notifications.show({
-                    title: "Успешно",
-                    message: "Данные были обновлены!",
-                    color: "green",
-                    icon: <IconCheck size={18} />,
-                });
-                navigate(`/groups/${currentGroup?.id}`);
-            } else {
-                notifications.show({
-                    title: "Ошибка",
-                    message: error ?? "Не удалось обновить группу",
-                    color: "red",
-                    icon: <IconX size={18} />,
-                });
-            }
-            setUpdated(false);
+        if (!updated) return;
+
+        if (!error) {
+            notifications.show({
+                title: "Успешно",
+                message: "Данные были обновлены!",
+                color: "green",
+                icon: <IconCheck size={18} />,
+            });
+            navigate(`/groups/${currentGroup?.id}`);
+        } else {
+            notifications.show({
+                title: "Ошибка",
+                message: error ?? "Не удалось обновить группу",
+                color: "red",
+                icon: <IconX size={18} />,
+            });
         }
+
+        setUpdated(false);
     }, [updated, error]);
 
     return (
@@ -61,14 +59,19 @@ export const EditGroupPage = () => {
             <Paper withBorder p="xl" radius="md">
                 <Title order={3}>Изменение группы</Title>
                 <Space h="md" />
-                <GroupForm
-                    initialValues={currentGroup}
-                    onSubmit={async (values) => {
-                        await handleUpdate(values);
-                    }}
-                    onCancel={() => navigate(`/groups/${currentGroup.id}`)}
-                    loading={loading}
-                />
+
+                {loading || !currentGroup ? (
+                    <Center>
+                        <Loader color={mainColor} />
+                    </Center>
+                ) : (
+                    <GroupForm
+                        initialValues={currentGroup}
+                        onSubmit={handleUpdate}
+                        onCancel={() => navigate(`/groups/${currentGroup.id}`)}
+                        loading={loading}
+                    />
+                )}
             </Paper>
         </Container>
     );

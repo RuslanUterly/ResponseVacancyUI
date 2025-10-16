@@ -1,9 +1,13 @@
 import { useForm } from "@mantine/form";
-import { Stack, TextInput, NumberInput, Select, Button, Group } from "@mantine/core";
+import {Stack, TextInput, NumberInput, Select, Button, Group, Loader, Textarea} from "@mantine/core";
 import type {GroupDto, GroupFormProps} from "../types.ts";
 import { mainColor, cancelColor } from "../../../shared/components/theme/colors.ts";
+import {useProfileStore} from "../../profile/store.ts";
+import {useEffect} from "react";
 
 export const GroupForm = ({ initialValues, onSubmit, onCancel, loading }: GroupFormProps) => {
+    const { resumes, fetchResumes, isLoading: resumesLoading } = useProfileStore();
+    
     const form = useForm<GroupDto>({
         initialValues,
         validate: {
@@ -13,10 +17,17 @@ export const GroupForm = ({ initialValues, onSubmit, onCancel, loading }: GroupF
                 experience: (v) => (v ? null : "Выберите опыт"),
                 schedule: (v) => (v ? null : "Выберите график"),
             },
+            resumeId: (v) => (v ? null : "Выберите резюме"),
         },
     });
 
     const handleSubmit = form.onSubmit(onSubmit);
+
+    useEffect(() => {
+        if (!resumes) {
+            fetchResumes();
+        }
+    }, []);
 
     return (
         <form onSubmit={handleSubmit}>
@@ -42,6 +53,23 @@ export const GroupForm = ({ initialValues, onSubmit, onCancel, loading }: GroupF
                         { value: "shift", label: "Сменный график" },
                     ]}
                     {...form.getInputProps("settings.schedule")}
+                />
+                <Select
+                    label="Резюме"
+                    placeholder={resumesLoading ? "Загрузка..." : "Выберите резюме"}
+                    data={(resumes ?? []).map((r) => ({
+                        value: String(r.id),
+                        label: r.title,
+                    }))}
+                    rightSection={resumesLoading ? <Loader color={mainColor} size="xs" /> : null}
+                    {...form.getInputProps("resumeId")}
+                />
+                <Textarea
+                    label="Сопроводительное письмо"
+                    placeholder="Введите текст письма"
+                    autosize
+                    minRows={3}
+                    {...form.getInputProps("message")}
                 />
                 <Group justify="space-between" mt="md">
                     <Button color={cancelColor} variant="light" onClick={onCancel}>

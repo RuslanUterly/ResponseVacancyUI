@@ -1,4 +1,4 @@
-import type {HeadHunterClientCredentialsDto, UserInfo} from './types';
+import type { ResumeDto, UserInfo} from './types';
 import {baseUrl} from "../../shared/api/options.ts";
 import {authHeader} from "../../shared/api/authHeader.ts";
 
@@ -9,23 +9,27 @@ export const getProfile = async (): Promise<UserInfo> => {
         headers: authHeader() 
     });
     
-    if (!response.ok) throw new Error("Failed to fetch full user info");
+    if (!response.ok) throw new Error("Ошибка получения юзера");
     return await response.json();
 };
 
-export const updateHeadHunterCredentials = async (dto: HeadHunterClientCredentialsDto): Promise<void> => {
-    const response = await fetch(`${BASE_URL}/update-hh-credentials`, {
-        method: "POST",
-        headers: {
-            ...authHeader(),
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dto),
+export const hhLogin = async (): Promise<string> => {
+    const response = await fetch(`${BASE_URL}/login`, {
+        headers: authHeader()
+    });
+    
+    if (!response.ok) throw new Error("Ошибка получения redirectUrl")
+    return await response.text();
+}
+
+export const getResume = async (): Promise<ResumeDto[]> => {
+    const response = await fetch(`${BASE_URL}/resumes`, {
+        headers: authHeader()
     });
 
-    if (!response.ok) throw new Error("Failed to add HeadHunter credentials");
-    return;
-};
+    if (!response.ok) throw new Error("Failed to fetch full user info");
+    return await response.json();
+}
 
 export const exchangeHhCode = async (code: string): Promise<boolean> => {
     const response = await fetch(`${BASE_URL}/exchange-hh-code`, {

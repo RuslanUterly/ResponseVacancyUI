@@ -41,6 +41,14 @@ export const GroupPage = () => {
 
                     <Group>
                         <Button
+                            color={cancelColor}
+                            variant="light"
+                            onClick={() => setIsDeleteModalOpen(true)}
+                        >
+                            Удалить
+                        </Button>
+                        
+                        <Button
                             color={mainColor}
                             onClick={() => {
                                 if (currentGroup?.id) {
@@ -49,13 +57,6 @@ export const GroupPage = () => {
                             }}
                         >
                             Изменить
-                        </Button>
-
-                        <Button
-                            color={cancelColor}
-                            onClick={() => setIsDeleteModalOpen(true)}
-                        >
-                            Удалить
                         </Button>
                     </Group>
 

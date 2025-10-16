@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { useProfileStore } from "../../../modules/profile/store";
 import {
-    Container, Grid,
+    Container, Grid, Group,
     Paper,
     Space,
 } from "@mantine/core";
 import {ProfileHeader} from "../components/ProfileHeader.tsx";
-import {HhCredentialsForm} from "../components/HhCredentialsForm.tsx";
 import {HhAutoResponseButton} from "../components/HhAutoResponseButton.tsx";
+import {HhConnectionButton} from "../components/HhConnectionButton.tsx";
 
 export const ProfilePage = () => {
     const { user, fetchProfile } = useProfileStore();
@@ -23,12 +23,10 @@ export const ProfilePage = () => {
             <Grid>
                 <Grid.Col span={6}>
                     <Paper p="md" radius="md" withBorder>
-                        <HhCredentialsForm />
-                    </Paper>
-                </Grid.Col>
-                <Grid.Col span={6}>
-                    <Paper p="md" radius="md" align="center" withBorder>
-                        <HhAutoResponseButton/>
+                        <Group justify="space-between">
+                            <HhConnectionButton />
+                            <HhAutoResponseButton/>
+                        </Group>
                     </Paper>
                 </Grid.Col>
             </Grid>

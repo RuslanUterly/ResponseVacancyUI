@@ -8,6 +8,7 @@ export interface GroupSettings {
 export interface GroupDto {
     id?: bigint;
     resumeId?: bigint;
+    message?: string;
     settings?: GroupSettings;
 }
 
