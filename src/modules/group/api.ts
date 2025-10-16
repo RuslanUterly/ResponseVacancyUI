@@ -5,7 +5,7 @@ import type { GroupDto } from "./types.ts";
 const BASE_URL = `${baseUrl}/group`;
 
 export const getMyGroups = async (accountId: bigint): Promise<GroupDto[]> => {
-    const response = await fetch(`${BASE_URL}/my-groups?accountId=${accountId}`, {
+    const response = await fetch(`${BASE_URL}/?accountId=${accountId}`, {
         headers: authHeader(),
     });
 
@@ -16,7 +16,7 @@ export const getMyGroups = async (accountId: bigint): Promise<GroupDto[]> => {
 }
 
 export const getGroupById = async (groupId: bigint): Promise<GroupDto> => {
-    const response = await fetch(`${BASE_URL}/my-groups/${groupId}`, {
+    const response = await fetch(`${BASE_URL}/${groupId}`, {
         headers: authHeader(),
     });
 
@@ -27,7 +27,7 @@ export const getGroupById = async (groupId: bigint): Promise<GroupDto> => {
 }
 
 export const createGroup = async (dto: GroupDto): Promise<bigint> => {
-    const response = await fetch(`${BASE_URL}/create-group`, {
+    const response = await fetch(`${BASE_URL}/create`, {
         method: "POST",
         headers: {
             ...authHeader(),
@@ -43,7 +43,7 @@ export const createGroup = async (dto: GroupDto): Promise<bigint> => {
 }
 
 export const updateGroup = async (groupId: bigint, dto: GroupDto): Promise<void> => {
-    const response = await fetch(`${BASE_URL}/update-group/${groupId}`, {
+    const response = await fetch(`${BASE_URL}/update/${groupId}`, {
         method: "PUT",
         headers: {
             ...authHeader(),
@@ -57,7 +57,7 @@ export const updateGroup = async (groupId: bigint, dto: GroupDto): Promise<void>
 }
 
 export const deleteGroup = async (groupId: bigint): Promise<void> => {
-    const response = await fetch(`${BASE_URL}/delete-group/${groupId}`, {
+    const response = await fetch(`${BASE_URL}/delete/${groupId}`, {
         method: "DELETE",
         headers: authHeader(),
     });

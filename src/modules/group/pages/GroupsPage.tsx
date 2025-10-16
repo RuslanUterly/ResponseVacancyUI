@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import {Paper, Title, Group, Button, Center, Space, Container} from "@mantine/core";
+import {Paper, Title, Group, Button, Center, Space} from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import {useProfileStore} from "../../profile/store.ts";
 import {useGroupStore} from "../store.ts";
@@ -24,7 +24,7 @@ export const GroupsPage = () => {
     }, [user?.id]);
     
     return (
-        <Container size="md" style={{ width: "100%" }}>
+        <>
             <Space h="xl" />
             <Space h="xl" />
             
@@ -36,7 +36,7 @@ export const GroupsPage = () => {
             <Paper bg="#F8F8F8" withBorder p="md" radius="md">
                 {groups.length <= 0 && (
                     <Center>
-                        <Text c={cancelColor}> Необходимо добавить группу. Без групп автоотклики работать не будут!!!</Text>
+                        <Text c={cancelColor}>Необходимо добавить группу. Без групп автоотклики работать не будут!!!</Text>
                     </Center>
                 )}
                 
@@ -50,6 +50,6 @@ export const GroupsPage = () => {
                     ))}
                 </Group>
             </Paper>
-        </Container>
+        </>
     );
 };

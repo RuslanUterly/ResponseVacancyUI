@@ -6,6 +6,7 @@ import type { GroupSettings } from "../types.ts";
 import {cancelColor, mainColor} from "../../../shared/components/theme/colors.ts";
 import {GroupCard} from "../components/GroupCard.tsx";
 import {DeleteGroupModal} from "../modals/DeleteGroupModal.tsx";
+import {ExcludedWordsPage} from "../../excluded/pages/ExcludedWordsPage.tsx";
 
 export const GroupPage = () => {
     const navigate = useNavigate();
@@ -77,6 +78,8 @@ export const GroupPage = () => {
                     onClose={() => setIsDeleteModalOpen(false)}
                 />
             )}
+            
+            <ExcludedWordsPage></ExcludedWordsPage>
         </Container>
     );
 };
